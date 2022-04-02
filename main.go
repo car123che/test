@@ -16,7 +16,7 @@ var redisClient *redis.Client
 func main() {
 
 	fmt.Println("Inicio")
-	var redis_address = "34.71.101.12:6379"
+	var redis_address = "localhost:6379"
 	var redis_password = "" 
 
 	rdb := redis.NewClient(&redis.Options{
