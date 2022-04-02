@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"context"
 	"github.com/go-redis/redis/v8"
+	
 )
 
 var ctx = context.Background() 
@@ -71,4 +72,68 @@ func HandleUpdateVideos(w http.ResponseWriter, r *http.Request){
 			w.WriteHeader(405)
 			fmt.Fprintf(w, "Method not Supported!")
 		}
+}
+
+type video struct{
+	Id string
+	Title string
+	Description string
+	Imageurl string
+	Url string
+}
+
+func GetVideos()(videos []video){
+	
+	keys, err := redisClient.Keys(ctx,"*").Result()
+
+	if err != nil {
+		panic(err)
+	}
+
+	for _, key := range keys {
+		video := GetVideo(key)
+		videos = append(videos, video)
+	}
+
+	return videos
+}
+
+
+	
+
+func GetVideo(id string)(video video) {
+	
+	value, err := redisClient.Get(ctx, id).Result()
+
+	if err != nil {
+		panic(err)
+	}
+
+	if err != redis.Nil {
+		err = json.Unmarshal([]byte(value), &video)
+	}
+	
+	return video
+}
+
+
+func SaveVideo(video video)(){
+
+	videoBytes, err  := json.Marshal(video)
+	if err != nil {
+		  panic(err)
+	  }
+  
+	err = redisClient.Set(ctx, video.Id, videoBytes, 0).Err()
+	if err != nil {
+		  panic(err)
+	  }
+  }
+
+
+func SaveVideos(videos []video)(){
+	for _, video := range videos {
+		SaveVideo(video)
+	}
+
 }
