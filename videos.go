@@ -13,7 +13,7 @@ type video struct{
 	Url string
 }
 
-func getVideos()(videos []video){
+func GetVideos()(videos []video){
 	
 	keys, err := redisClient.Keys(ctx,"*").Result()
 
@@ -32,7 +32,7 @@ func getVideos()(videos []video){
 
 	
 
-func getVideo(id string)(video video) {
+func GetVideo(id string)(video video) {
 	
 	value, err := redisClient.Get(ctx, id).Result()
 
@@ -48,7 +48,7 @@ func getVideo(id string)(video video) {
 }
 
 
-func saveVideo(video video)(){
+func SaveVideo(video video)(){
 
 	videoBytes, err  := json.Marshal(video)
 	if err != nil {
@@ -62,7 +62,7 @@ func saveVideo(video video)(){
   }
 
 
-func saveVideos(videos []video)(){
+func SaveVideos(videos []video)(){
 	for _, video := range videos {
 		saveVideo(video)
 	}

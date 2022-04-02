@@ -39,7 +39,7 @@ func main() {
 
 func HandleGetVideos(w http.ResponseWriter, r *http.Request){
 	
-	videos := getVideos()
+	videos := GetVideos()
 	videoBytes, err  := json.Marshal(videos)
 
 	if err != nil {
@@ -65,7 +65,7 @@ func HandleUpdateVideos(w http.ResponseWriter, r *http.Request){
 				fmt.Fprintf(w, "Bad request")
 			}
 
-			saveVideos(videos)
+			SaveVideos(videos)
 
 		} else {
 			w.WriteHeader(405)
